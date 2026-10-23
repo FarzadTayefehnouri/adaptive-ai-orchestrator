@@ -1,0 +1,47 @@
+name: Release Gate (>80% Approval & Security Verification)
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_tag:
+        description: 'Tag to promote from Beta to Stable'
+        required: true
+      favorable_votes:
+        description: 'Number of verified favorable community votes'
+        required: true
+      total_valid_votes:
+        description: 'Total number of valid community votes'
+        required: true
+      quorum_met:
+        description: 'Has quorum threshold been reached? (true/false)'
+        required: true
+        default: 'false'
+
+jobs:
+  gatekeeper:
+    name: Evaluate Release Qualification (Section 15)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Evaluate Approval Percentage
+        run: |
+          QUORUM="${{ github.event.inputs.quorum_met }}"
+          if [ "$QUORUM" != "true" ]; then
+            echo "::error::Release promotion rejected: Minimum quorum not met."
+            exit 1
+          fi
+
+          FAV="${{ github.event.inputs.favorable_votes }}"
+          TOTAL="${{ github.event.inputs.total_valid_votes }}"
+          
+          APPROVAL=$(python3 -c "fav=$FAV; tot=$TOTAL; print((fav / tot) * 100.0)")
+          echo "Calculated Valid Approval: $APPROVAL%"
+
+          PASSED=$(python3 -c "val=$APPROVAL; print('true' if val > 80.0 else 'false')")
+
+          if [ "$PASSED" != "true" ]; then
+            echo "::error::Promotion blocked: Approval is $APPROVAL% which is not strictly greater than 80%."
+            exit 1
+          fi
+
+          echo "Approval requirement verified (>80%). Promotion authorized."
