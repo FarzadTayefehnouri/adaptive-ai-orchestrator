@@ -1,3 +1,223 @@
+Adaptive AI Orchestrator
+
+A self-improving, fault-resilient multi-agent artificial intelligence orchestrator designed for personal empowerment and public-benefit collaboration. The system dynamically connects to multiple AI providers, maximizes free-tier allowances, performs deep multi-modal input analysis, and guarantees execution integrity through dual backward and forward error recovery.
+
+Table of Contents
+
+1. Core Objectives
+
+2. Key Architectural Innovations
+
+Intelligent Quota & Multi-Provider Routing
+
+Deep Input Analysis
+
+Dual Recovery Engine: Backward & Forward
+
+Three-Tier Memory Architecture
+
+3. Multi-Agent Architecture
+
+4. Repository Structure
+
+5. Getting Started & Installation
+
+6. Governance, Provenance & Release Policy
+
+7. Security & Secrets Management
+
+8. License
+
+نسخه فارسی (Persian Version)
+
+1. Core Objectives
+
+Public-Benefit & Self-Sustaining: Built for personal utility and open community benefit, engineered so that its ongoing vitality does not depend on the permanent involvement of a single individual.
+
+Cost-Free Optimization: Utilizes available free-tier quotas and community credits across reputable AI providers under strict compliance with official terms of service.
+
+Deep Content-Aware Processing: Inspects raw file content, font tables, and media streams rather than relying on superficial file extensions (e.g., distinguishing searchable text PDFs from scanned image PDFs).
+
+Resilient Dual Recovery: Implements graph-based backward fault localization (identifying root causes) and forward selective re-execution (recomputing only affected downstream dependencies).
+
+Evidence-Based Governance: Stable releases are strictly gated by automated technical/security audits and a verified community approval threshold strictly exceeding 80.0%.
+
+2. Key Architectural Innovations
+
+Intelligent Quota & Multi-Provider Routing
+
+Quota Transparency: Distinguishes verified real-time quota data from heuristic estimates. Unreported quotas are explicitly flagged to the user.
+
+Dynamic Failover: Automatically reroutes tasks to available fallback providers when encountering rate limits (HTTP 429) or quota exhaustion.
+
+Complexity-Tiered Dispatching: Routes simple tasks to low-latency, lightweight models (e.g., Groq LLaMA 8B, Gemini Flash) and reserves high-capacity reasoning models (Gemini Pro, Claude 3.5 Sonnet, GPT-4o) for complex multi-step reasoning.
+
+Deep Input Analysis
+
+Examines binary streams across text, audio, images, video, source code, tabular datasets, and composite documents. Automatically detects scanned documents requiring multi-modal OCR versus native searchable documents.
+
+Dual Recovery Engine: Backward & Forward
+
+Backward Recovery (Root-Cause Isolation): Traverses the execution Directed Acyclic Graph (DAG) backwards from a point of failure to isolate the earliest faulty component, model, tool, or corrupted input.
+
+Forward Recovery (Minimal Recomputation): Repairs the identified faulty step and topologically re-executes only its dependent downstream descendants, preserving all previously validated intermediate results.
+
+Three-Tier Memory Architecture
+
+Ephemeral Working Memory: Fast in-memory state tracking for active task execution.
+
+Validated Results Store: Versioned, immutable storage of verified intermediate and final artifacts.
+
+Empirical Experience Memory: Vectorized performance telemetry recording model reliability, recurring error patterns, and successful recovery strategies.
+
+3. Multi-Agent Architecture
+
+               +-------------------------------------------------+
+               |                   User / Client                 |
+               +-------------------------------------------------+
+                                        | (Input Request & Files)
+                                        v
+               +-------------------------------------------------+
+               |            Input Analyzer Agent                 |
+               | (Deep Stream Inspection: Text/Scanned PDF, etc.)|
+               +-------------------------------------------------+
+                                        |
+                                        v
+               +-------------------------------------------------+
+               |           Task Classifier Agent                 |
+               |     (Complexity, Resource & DAG Planning)       |
+               +-------------------------------------------------+
+                                        |
+                                        v
+               +-------------------------------------------------+
+               |             Smart Model Router                  |
+               |  (Quota-Aware, Cost, Speed & Tier Selection)    |
+               +-------------------------------------------------+
+                                        |
+                                        v
+               +-------------------------------------------------+
+               |           Workflow Coordinator                  |
+               |       (Parallel DAG Execution Engine)           |
+               +-------------------------------------------------+
+                         /              |              \
+                        v               v               v
+                [Coding Agent]  [Data Analytics]  [Reasoning Agent]
+                        \               |              /
+                         v               v             v
+               +-------------------------------------------------+
+               |           Critic & Validator Agent              |
+               |   (Factual Verification, Schema & Quality Gate) |
+               +-------------------------------------------------+
+                                        |
+                    +-------------------+-------------------+
+                    | (Validation Passed)                   | (Fault Detected)
+                    v                                       v
+         +--------------------+             +-------------------------------+
+         | Validated Store    |             | Dual Recovery Engine          |
+         | & Handoff to User  |             | (Backward DAG & Forward Plan) |
+         +--------------------+             +-------------------------------+
+
+
+4. Repository Structure
+
+adaptive-ai-orchestrator/
+├── .github/
+│   ├── workflows/
+│   │   ├── ci.yml                     # Automated testing & code verification
+│   │   └── release-gate.yml           # Strict >80% approval community release gate
+│   ├── ISSUE_TEMPLATE/
+│   │   ├── bug_report.md              # Categorized fault reporting (Input, Model, Tool, Agent, DAG)
+│   │   └── feature_request.md         # Architecture-aligned feature request template
+│   └── PULL_REQUEST_TEMPLATE.md       # Digital signature and compliance checklist
+├── docs/
+│   ├── architecture.md               # Detailed DAG execution lifecycle and agent behavior
+│   ├── governance.md                 # Provenance, UTC versioning, and voting bylaws
+│   └── requirements_fa.md            # Original 18-section foundational specification (Persian)
+├── src/
+│   └── orchestrator/
+│       ├── __init__.py
+│       ├── config.py                 # Configuration and environment loaders
+│       ├── models.py                 # Pydantic schemas (Task, Step, Error, Validation)
+│       ├── providers/
+│       │   ├── quota_manager.py      # Real vs estimated quota tracking & failover engine
+│       │   └── router.py             # Multi-tier complexity-based model router
+│       ├── agents/
+│       │   └── input_analyzer.py     # Binary stream analyzer (Text vs Scanned PDF)
+│       ├── recovery/
+│       │   └── engine.py             # Zero-dependency DAG backward and forward recovery
+│       └── memory/
+│           └── store.py              # Three-tier memory (Working, Validated, Experience)
+├── tests/
+│   ├── test_quota_manager.py         # Quota transparency & rate-limit failover tests
+│   ├── test_router.py                # Model complexity routing tests
+│   └── test_recovery_engine.py       # DAG back-traversal and selective forward replay tests
+├── .env.example                      # Template environment variables
+├── .gitignore                        # Strict secret and cache exclusions
+├── pyproject.toml / requirements.txt # Standard packaging definitions
+├── README.md                         # Bilingual documentation (English & Persian)
+├── CONTRIBUTING.md                   # Contribution bylaws and signed commit standards
+├── SECURITY.md                       # Secret segregation and responsible disclosure policy
+└── LICENSE                           # Apache 2.0 Open Source License
+
+
+5. Getting Started & Installation
+
+Prerequisites
+
+Python 3.10 or higher
+
+Git
+
+Installation
+
+# 1. Clone the repository
+git clone https://github.com/FarzadTayefehnouri/adaptive-ai-orchestrator.git
+cd adaptive-ai-orchestrator
+
+# 2. Create and activate a virtual environment
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# 3. Install dependencies
+pip install -r requirements.txt
+
+# 4. Configure environment credentials
+cp .env.example .env
+# Edit .env to add your free-tier keys (e.g. Gemini, Groq)
+
+# 5. Run the automated test suite
+python3 -m unittest discover tests/ -v
+
+
+6. Governance, Provenance & Release Policy
+
+Original Project Creator: Farzad Tayefehnouri.
+
+Historical Ownership: The identity of the original creator and first verified contributors remains permanent and immutable across all future releases.
+
+Digital Signatures: All official contributions must be cryptographically signed (git commit -S) using verified GPG/SSH keys.
+
+Strict UTC Timestamps: All releases, audit logs, and benchmark evaluations are recorded in Coordinated Universal Time (UTC) with second-level precision.
+
+Democratic Release Gate: Promoting a release from Beta to Stable requires:
+
+A verified community approval rate strictly greater than 80.0% (Approval > 80.0%; exactly 80.0% is insufficient).
+
+Fulfillment of minimum statistical quorum (insufficient sample counts default to "Insufficient Evidence").
+
+100% pass rate across automated security and technical test suites.
+
+7. Security & Secrets Management
+
+Complete segregation between open-source codebase and private operational data/API keys.
+
+Secret masking in all application logs and telemetry.
+
+Security vulnerabilities must be reported privately via GitHub Security Advisories.
+
+8. License
+
+Distributed under the Apache 2.0 License.
 # Adaptive AI Orchestrator (سامانه هوش مصنوعی چندعاملی تطبیق‌پذیر)
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
