@@ -28,8 +28,6 @@ Three-Tier Memory Architecture
 
 8. License
 
-نسخه فارسی (Persian Version)
-
 1. Core Objectives
 
 Public-Benefit & Self-Sustaining: Built for personal utility and open community benefit, engineered so that its ongoing vitality does not depend on the permanent involvement of a single individual.
