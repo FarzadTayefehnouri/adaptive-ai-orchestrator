@@ -16,10 +16,22 @@ class QuotaType(str, Enum):
 class ErrorCategory(str, Enum):
     INPUT_ERROR = "input_error"
     PROVIDER_ERROR = "provider_error"      # Rate limit, 429, timeout
-    MODEL_ERROR = "model_error"            # Incoherence, hallucination, refusal
+    MODEL_ERROR = "model_error"            # Incoherence, hallucination, refusal, incapable
     TOOL_ERROR = "tool_error"              # Sandbox/library failure
     AGENT_FAULT = "agent_fault"            # Logic fault in agent code
     DEPENDENCY_ERROR = "dependency_error"  # Upstream step delivered bad data
+    ESCALATION_TRIGGER = "escalation_trigger" # Model incapable, promoted to higher tier
+
+class TokenUsage(dict):
+    def __init__(self, prompt_tokens: int = 0, completion_tokens: int = 0):
+        super().__init__(
+            prompt_tokens=prompt_tokens,
+            completion_tokens=completion_tokens,
+            total_tokens=prompt_tokens + completion_tokens
+        )
+        self.prompt_tokens = prompt_tokens
+        self.completion_tokens = completion_tokens
+        self.total_tokens = prompt_tokens + completion_tokens
 
 class ExecutionStep:
     def __init__(
@@ -32,7 +44,10 @@ class ExecutionStep:
         output_payload: Optional[Dict[str, Any]] = None,
         status: str = "pending",
         model_used: Optional[str] = None,
-        duration_ms: Optional[float] = None
+        complexity: TaskComplexity = TaskComplexity.LIGHT,
+        duration_ms: Optional[float] = None,
+        token_usage: Optional[TokenUsage] = None,
+        max_token_budget: Optional[int] = None
     ):
         self.step_id = step_id
         self.name = name
@@ -42,8 +57,24 @@ class ExecutionStep:
         self.output_payload = output_payload
         self.status = status
         self.model_used = model_used
+        self.complexity = complexity
         self.duration_ms = duration_ms
+        self.token_usage = token_usage or TokenUsage(0, 0)
+        self.max_token_budget = max_token_budget
+        self.escalation_count = 0
+        self.escalation_log: List[Dict[str, Any]] = []
         self.created_at_utc = datetime.now(timezone.utc).isoformat()
+
+    def record_escalation(self, from_model: str, to_model: str, reason: str, triggered_by: str = "system"):
+        self.escalation_count += 1
+        self.escalation_log.append({
+            "from_model": from_model,
+            "to_model": to_model,
+            "reason": reason,
+            "triggered_by": triggered_by,
+            "timestamp_utc": datetime.now(timezone.utc).isoformat()
+        })
+        self.model_used = to_model
 
 class ErrorRecord:
     def __init__(

@@ -1,28 +1,24 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
+requires = ["setuptools>=65.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "adaptive-ai-orchestrator"
-version = "0.1.0a1"
-description = "Self-improving, fault-resilient multi-agent AI orchestrator with intelligent quota routing and dual backward/forward recovery."
+version = "0.2.0"
+description = "Adaptive Multi-Agent AI Orchestrator with Controlled Worker Pool, Capability Matching, and Checkpointed Recovery"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "Apache-2.0"}
 authors = [
-    {name = "Farzad Tayefehnouri", email = "farzad.tayefehnouri@gmail.com"}
+    {name = "Farzad Tayefehnouri"}
 ]
 dependencies = [
-    "pydantic>=1.10.0",
-    "python-dotenv>=1.0.0",
-    "typing-extensions>=4.5.0",
-    "httpx>=0.24.0",
+    "pydantic>=1.10.0,<3.0.0",
+    "python-dotenv>=1.0.0,<2.0.0",
+    "httpx>=0.24.0,<1.0.0",
+    "fastapi>=0.100.0,<1.0.0",
+    "uvicorn>=0.23.0,<1.0.0"
 ]
 
-[project.optional-dependencies]
-dev = [
-    "pytest>=7.0.0",
-    "networkx>=3.0",
-    "black>=23.0.0",
-    "flake8>=6.0.0"
-]
+[project.scripts]
+adaptive-orchestrator = "src.orchestrator.cli:main"
